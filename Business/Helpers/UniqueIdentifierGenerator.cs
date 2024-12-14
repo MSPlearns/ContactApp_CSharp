@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Business.Helpers
 {
-    internal class UniqueIdentifierGenerator
+    public static class UniqueIdentifierGenerator
     {
+        //Currently unable to call this from the ContactFactory due to circular dependency. Need to fix this.
+        public static string Generate()
+        {
+          return Guid.NewGuid().ToString();
+        }
     }
 }
