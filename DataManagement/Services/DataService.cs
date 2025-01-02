@@ -39,7 +39,7 @@ namespace DataManagement.Services
             }
         }
 
-        public List<T> LoadListToFile<T>()
+        public List<T> LoadListFromFile<T>()
         {
             // Load userlist from file
             try

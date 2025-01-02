@@ -12,6 +12,7 @@ namespace Business.Helpers
         public static string Generate()
         {
           return Guid.NewGuid().ToString();
+            //To unitTest: Create a stringified GUID with this method, and try to parse it back to a GUID. Assert that is a guid.
         }
     }
 }

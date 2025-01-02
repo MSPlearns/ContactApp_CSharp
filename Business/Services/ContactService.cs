@@ -19,7 +19,7 @@ namespace Business.Services
                                                   //then adds it to the list/file.
                                                   //Lastly, it returns a bool to confirm the contact creation.
         {
-            Contact contact = ContactFactory.CreateUser(form);
+            Contact contact = ContactFactory.Create(form);
             // Add user
             if (contact != null)
             {
@@ -34,7 +34,7 @@ namespace Business.Services
 
         public IEnumerable<Contact> GetAll() //Returns all contacts in the file as IEnumerable so that the list can't be modified
         {
-            _contacts = _fileService.LoadListToFile<Contact>();
+            _contacts = _fileService.LoadListFromFile<Contact>();
             return _contacts;
         }
     }

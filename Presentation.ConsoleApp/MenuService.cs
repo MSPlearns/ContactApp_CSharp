@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Services;
 using Dtos;
+using Domain.Models;
 
 namespace Presentation.ConsoleApp
 {
@@ -93,20 +95,13 @@ namespace Presentation.ConsoleApp
 
             //TODO: VALIDATION SO THAT A METHOD CAN BE USED AND LOOP IF THE INPUT IS INVALID
             ContactCreationForm form = new();
-            Console.Write("First name: ");
-            form.FirstName = Console.ReadLine()!;
-            Console.Write("Last name: ");
-            form.LastName = Console.ReadLine()!;
-            Console.Write("Email: ");
-            form.Email = Console.ReadLine()!;
-            Console.Write("Phone number: ");
-            form.PhoneNumber = Console.ReadLine()!;
-            Console.Write("Adress: ");
-            form.Address = Console.ReadLine()!;
-            Console.Write("Postcode: ");
-            form.Postcode = Console.ReadLine()!;
-            Console.Write("City: ");
-            form.City = Console.ReadLine()!;
+            form.FirstName = PromptAndValidate("First name:", nameof(form.FirstName));
+            form.LastName = PromptAndValidate("Last name:", nameof(form.LastName));
+            form.Email = PromptAndValidate("Email:", nameof(form.Email));
+            form.PhoneNumber = PromptAndValidate("Phone number:", nameof(form.PhoneNumber));
+            form.Address = PromptAndValidate("Address:", nameof(form.Address));
+            form.Postcode = PromptAndValidate("Postcode:", nameof(form.Postcode));
+            form.City = PromptAndValidate("City:", nameof(form.City));
 
             //Call the domain service to add the contact
             if (_contactService.Add(form))
@@ -115,9 +110,33 @@ namespace Presentation.ConsoleApp
             }
             else
             {
-                TextDisplayService.ErrorMessage("Error adding contact!");
+                TextDisplayService.ErrorMessage("Unknown error adding contact!");
             }
         }
+
+        public string PromptAndValidate(string prompt, string propertyName)
+        {
+            while (true) 
+            {
+                Console.WriteLine();
+                Console.Write(prompt);
+                var userInput= Console.ReadLine() ?? string.Empty;
+                var results = new List<ValidationResult>();
+                var context = new ValidationContext(new Contact()) {MemberName = propertyName};
+                if (Validator.TryValidateProperty(userInput, context, results))
+                {
+                    return userInput;
+                }
+                else
+                {
+                    foreach (var result in results)
+                    {
+                        TextDisplayService.ErrorMessage(result.ErrorMessage);
+                    }
+                }
+            }
+        }
+
 
         public void ShowAllContactsDialog()  //Get all contacts 
         {
