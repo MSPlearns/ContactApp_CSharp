@@ -1,16 +1,19 @@
 ﻿using Domain.Models;
 using Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Domain.Factories
 {
-    public class ContactFactory
+    public class ContactFactory : IContactFactory
     {
-        public static Contact Create(ContactCreationForm form)
+        private IUniqueIdentifierGenerator UniqueIdentifierGenerator { get; }
+
+        public ContactFactory(IUniqueIdentifierGenerator UIG)
+        {
+            UniqueIdentifierGenerator = UIG;
+        }
+
+        public Contact Create(ContactCreationForm form)
         {
             if (!ValidateFormField(form))
             {
@@ -18,10 +21,8 @@ namespace Domain.Factories
             }
             try
             {
-                //Problem with circular dependency - UniqueIdentifierGenerator.Generate() is not accessible
-                //Generating GUID here instead as a quick fix
-                //string uniqueId = UniqueIdentifierGenerator.Generate();
-                string uniqueId = Guid.NewGuid().ToString();
+                //Interface for generating unique identifiers implemented to solve circular dependency - now I have to inject dependency everywhere so shit works
+                string uniqueId = UniqueIdentifierGenerator.Generate();
                 return new Contact {
                     Id = uniqueId,
                     FirstName = form.FirstName,

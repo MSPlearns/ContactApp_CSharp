@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataManagement.Services
 {
-    public class DataService
+    public class DataService : IDataService
     {
         private readonly string _directoryPath; // Path to the directory where the file is stored
         private readonly string _filePath; // Name of the file

@@ -1,4 +1,5 @@
-﻿using DataManagement.Services;
+﻿using Business.Helpers;
+using DataManagement.Services;
 using Domain.Factories;
 using Domain.Models;
 using Dtos;
@@ -10,16 +11,24 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-    public class ContactService
+    public class ContactService : IContactService
     {
         private List<Contact> _contacts = [];
-        private readonly DataService _fileService = new(); //Dependency Injection would allow for a single instance of the DataService to be used for the whole application
+        private IDataService _fileService; //Dependency Injection would allow for a single instance of the DataService to be used for the whole application
+        private IContactFactory _contactFactory;
+
+        public ContactService(IContactFactory contactFactory, IDataService dataService)
+        {
+            _contactFactory = contactFactory;
+            _fileService = dataService;
+        }
+
         public bool Add(ContactCreationForm form) //Takes in a DTO,
                                                   //sends it to the factory to create a new Contact object,
                                                   //then adds it to the list/file.
                                                   //Lastly, it returns a bool to confirm the contact creation.
         {
-            Contact contact = ContactFactory.Create(form);
+            Contact contact = _contactFactory.Create(form);
             // Add user
             if (contact != null)
             {

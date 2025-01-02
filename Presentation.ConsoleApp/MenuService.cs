@@ -15,8 +15,12 @@ namespace Presentation.ConsoleApp
         public bool MenuRunning { get; set; } = true;
         private int _selectedOption = 0;
         private readonly List<string> _menuOptions = ["Add contact", "Show all contacts", "Exit"]; //If changed, ajust the HandleSelection method accordingly
-        private readonly ContactService _contactService = new();
+        private readonly ContactService _contactService;
 
+        public MenuService(ContactService contactService)
+        {
+            _contactService = contactService;
+        }
         public void Show() //Displays the main menu and waits for user input
         {
             while (MenuRunning)
