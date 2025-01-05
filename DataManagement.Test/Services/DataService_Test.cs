@@ -5,7 +5,7 @@ namespace DataManagement.Test.Services
     {
         private DataService _dataService = new ("DataTest", "TestFile.json");
         [Fact]
-        public void SaveAndLoadList_ShouldSaveListToFile_Wehnwhatever() {
+        public void SaveAndLoadList_ShouldSaveListToFile_AndLoadSameListFromFile() {
             //Arrange 
             List<string> testList = new () { "Test1", "Test2", "Test3" };
             //Act

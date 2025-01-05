@@ -10,29 +10,31 @@ using Domain.Models;
 
 namespace Presentation.ConsoleApp
 {
-    public class MenuService
+    public class MenuService : IMenuService
     {
         public bool MenuRunning { get; set; } = true;
         private int _selectedOption = 0;
         private readonly List<string> _menuOptions = ["Add contact", "Show all contacts", "Exit"]; //If changed, ajust the HandleSelection method accordingly
-        private readonly ContactService _contactService;
+        private readonly IContactService _contactService;
+        private readonly ITextDisplayService _textDisplayService;
 
-        public MenuService(ContactService contactService)
+        public MenuService(IContactService contactService, ITextDisplayService textDisplayService)
         {
             _contactService = contactService;
+            _textDisplayService = textDisplayService;
         }
         public void Show() //Displays the main menu and waits for user input
         {
             while (MenuRunning)
             {
                 Console.Clear();
-                TextDisplayService.Header("Main Menu");
+                _textDisplayService.Header("Main Menu");
 
                 foreach (var option in _menuOptions)
                 {
                     if (_menuOptions[_selectedOption] == option)
                     {
-                        TextDisplayService.Selected(option);
+                        _textDisplayService.Selected(option);
                     }
                     else
                     {
@@ -83,7 +85,7 @@ namespace Presentation.ConsoleApp
                 case 2:
                     //Exit
                     Console.WriteLine("Exiting...");
-                    TextDisplayService.AwaitKeyPress();
+                    _textDisplayService.AwaitKeyPress();
                     Environment.Exit(0);
                     break;
                 default:
@@ -95,9 +97,8 @@ namespace Presentation.ConsoleApp
 
         {
             Console.Clear();
-            TextDisplayService.Header("Add Contact");
+            _textDisplayService.Header("Add Contact");
 
-            //TODO: VALIDATION SO THAT A METHOD CAN BE USED AND LOOP IF THE INPUT IS INVALID
             ContactCreationForm form = new();
             form.FirstName = PromptAndValidate("First name:", nameof(form.FirstName));
             form.LastName = PromptAndValidate("Last name:", nameof(form.LastName));
@@ -110,23 +111,25 @@ namespace Presentation.ConsoleApp
             //Call the domain service to add the contact
             if (_contactService.Add(form))
             {
-                TextDisplayService.ConfirmationMessage("Contact added successfully!");
+                _textDisplayService.ConfirmationMessage("Contact added successfully!");
+                _textDisplayService.AwaitKeyPress();
             }
             else
             {
-                TextDisplayService.ErrorMessage("Unknown error adding contact!");
+                _textDisplayService.ErrorMessage("Error adding contact! Make sure you are providing a full name and either an email or phone number");
+                _textDisplayService.AwaitKeyPress();
             }
         }
 
         public string PromptAndValidate(string prompt, string propertyName)
         {
-            while (true) 
+            while (true)
             {
                 Console.WriteLine();
                 Console.Write(prompt);
-                var userInput= Console.ReadLine() ?? string.Empty;
+                var userInput = Console.ReadLine() ?? string.Empty;
                 var results = new List<ValidationResult>();
-                var context = new ValidationContext(new Contact()) {MemberName = propertyName};
+                var context = new ValidationContext(new Contact()) { MemberName = propertyName };
                 if (Validator.TryValidateProperty(userInput, context, results))
                 {
                     return userInput;
@@ -135,8 +138,11 @@ namespace Presentation.ConsoleApp
                 {
                     foreach (var result in results)
                     {
-                        TextDisplayService.ErrorMessage(result.ErrorMessage);
+                        _textDisplayService.ErrorMessage(result.ErrorMessage!);
+
                     }
+                    _textDisplayService.AwaitKeyPress();
+                    _textDisplayService.ClearConsoleLines(results.Count()+3);
                 }
             }
         }
@@ -145,16 +151,16 @@ namespace Presentation.ConsoleApp
         public void ShowAllContactsDialog()  //Get all contacts 
         {
             Console.Clear();
-            TextDisplayService.Header("Contacts");
-           
+            _textDisplayService.Header("Contacts");
+
             var contacts = _contactService.GetAll();
             //Display all contacts
             int counter = 1;
             foreach (var contact in contacts)
             {
-                TextDisplayService.ContactList(counter++, contact);
+                _textDisplayService.ContactList(counter++, contact);
             }
-            TextDisplayService.AwaitKeyPress();
+            _textDisplayService.AwaitKeyPress();
         }
     }
 }

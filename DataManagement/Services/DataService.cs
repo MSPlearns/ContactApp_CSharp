@@ -51,15 +51,13 @@ namespace DataManagement.Services
 
                 var json = File.ReadAllText(_filePath);
                 var list = JsonSerializer.Deserialize<List<T>>(json, _jsonSerializerOptions);
-                return list; // Return null list if the deserialization fails
-                             // maybe should be an empty list???
+                return list!; 
 
             }
             catch (Exception e)
             {
                 Console.WriteLine($"An error occurred: {e.Message}");
-                return []; // Return an empty list if an error occurs
-                           // maybe it should be null??
+                return []; 
             }
         }
     }

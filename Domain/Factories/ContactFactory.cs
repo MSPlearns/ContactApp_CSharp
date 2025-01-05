@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Dtos;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Domain.Factories
@@ -19,14 +20,19 @@ namespace Domain.Factories
             {
                 return null!;
             }
+            string id = UniqueIdentifierGenerator.Generate();
+            var context = new ValidationContext(new Contact()) { MemberName = "Id" };
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateProperty(id, context, results))
+            {
+                return null!;
+            }
             try
             {
-                //Interface for generating unique identifiers implemented to solve circular dependency - now I have to inject dependency everywhere so shit works
-                string uniqueId = UniqueIdentifierGenerator.Generate();
                 return new Contact {
-                    Id = uniqueId,
-                    FirstName = form.FirstName,
-                    LastName = form.LastName,
+                    Id = id,
+                    FirstName = form.FirstName!,
+                    LastName = form.LastName!,
                     Email = form.Email!,
                     PhoneNumber = form.PhoneNumber!,
                     Address = form.Address!,

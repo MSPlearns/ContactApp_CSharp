@@ -14,7 +14,7 @@ namespace Business.Services
     public class ContactService : IContactService
     {
         private List<Contact> _contacts = [];
-        private IDataService _fileService; //Dependency Injection would allow for a single instance of the DataService to be used for the whole application
+        private IDataService _fileService;
         private IContactFactory _contactFactory;
 
         public ContactService(IContactFactory contactFactory, IDataService dataService)

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Presentation.ConsoleApp
 {
-    public class TextDisplayService
+    public class TextDisplayService : ITextDisplayService
     {
-        public static void Header(string text)
+        public void Header(string text)
         {
             Console.WriteLine(text.ToUpper());
             for (int i = 0; i < text.Length; i++)
@@ -19,20 +19,19 @@ namespace Presentation.ConsoleApp
             Console.WriteLine();
         }
 
-        public static string ToSentenceCase(string text)
+        public string ToSentenceCase(string text)
         {
             text = text.ToLower();
             return char.ToUpper(text[0]) + text.Substring(1);
         }
 
-        public static void AwaitKeyPress()
+        public void AwaitKeyPress()
         {
             Console.WriteLine("Press any key to continue...");
-            Console.WriteLine();
             Console.ReadKey();
         }
 
-        public static void Selected(string option)
+        public void Selected(string option)
         {
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.White;
@@ -40,23 +39,21 @@ namespace Presentation.ConsoleApp
             Console.ResetColor();
         }
 
-        public static void ConfirmationMessage(string message)
+        public void ConfirmationMessage(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(message);
-            AwaitKeyPress();
             Console.ResetColor();
         }
 
-        public static void ErrorMessage(string message)
+        public void ErrorMessage(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
-            AwaitKeyPress();
             Console.ResetColor();
         }
 
-        public static void ContactList(int index, Contact contact)
+        public void ContactList(int index, Contact contact)
         {
             Console.WriteLine();
             Console.WriteLine($"[{index}]");
@@ -70,6 +67,25 @@ namespace Presentation.ConsoleApp
             Console.WriteLine($"{"ID:",-13}{contact.Id}");
             Console.ResetColor();
 
+        }
+
+        // Method used to clear a determined number of lines of the console (Implemented with help of the internet)
+        public void ClearConsoleLines(int linesToClear)
+        {
+            int currentLineCursor = Console.CursorTop;
+
+            // Set the cursor position x lines back from the current position
+            Console.SetCursorPosition(0, Console.CursorTop - linesToClear);
+
+            // Clear the content of the lines
+            for (int i = 0; i < linesToClear; i++)
+            {
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop + 1);
+            }
+
+            // Restore the cursor position to the original line
+            Console.SetCursorPosition(0, currentLineCursor - linesToClear);
         }
     }
 }
