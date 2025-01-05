@@ -35,7 +35,7 @@ Anything marked with a + has been implemented
     + SOLID principles
     + Service Pattern
     + Factory Pattern
-  - **Unit tests** with mocks (where necessary) for all methods.
+  + **Unit tests** with mocks (where necessary) for all methods.
 
 ## Technologies Used
 - Language: C#
