@@ -1,0 +1,26 @@
+﻿<Window x:Class="Presentation.WinPF_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Presentation.WinPF_App"
+        xmlns:viewmodels="clr-namespace:Presentation.WinPF_App.ViewModels"
+        xmlns:views="clr-namespace:Presentation.WinPF_App.Views"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="300">
+    <Grid>
+        <ContentControl Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewmodels:ContactsViewModel}">
+                    <views:ContactsView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewmodels:NewContactViewModel}">
+                    <views:NewContactView/>
+                </DataTemplate>
+                
+            </ContentControl.Resources>
+        </ContentControl>
+    </Grid>
+</Window>
