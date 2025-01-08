@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Presentation.WinPF_App.ViewModels
@@ -9,7 +10,10 @@ namespace Presentation.WinPF_App.ViewModels
         private readonly IServiceProvider _serviceProvider;
 
         [ObservableProperty]
-        private string _title = "Edit Contact";
+        private Contact _selectedContact = new();
+
+        [ObservableProperty]
+        private string _title = "Edit";
 
         public EditContactViewModel(IServiceProvider serviceProvider)
         {
@@ -22,5 +26,18 @@ namespace Presentation.WinPF_App.ViewModels
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
         }
+
+        [RelayCommand]
+        private void GoToContactDetail(Contact contact)
+        {
+            var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
+            contactDetailViewModel.SelectedContact = contact;
+
+            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+            mainViewModel.CurrentViewModel = contactDetailViewModel;
+
+
+        }
+
     }
 }

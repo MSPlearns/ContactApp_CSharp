@@ -4,10 +4,10 @@ namespace Domain.Models
 {
     public class Contact
     {
- 
+
         [Required]
         public string Id { get; set; } = null!;
-        
+
         [Required(ErrorMessage = "*First name field is required")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "*First name must contain 2 to 50 characters")]
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜäöüßøØåÅæÆ'’\s-]+$", ErrorMessage = "*First name cannot contain special characters")]
@@ -32,5 +32,10 @@ namespace Domain.Models
 
         [RegularExpression(@"^[A-Za-zÀ-ÿ\s'\-]{2,100}$", ErrorMessage = "*City must be 2 to 100 characters long and contain only valid characters")] //letters, spaces, hyphens, and apostrophes, lenght 2-100
         public string? City { get; set; } = null!;
+
+
+        public string FullName => $"{FirstName} {LastName}";
+
+        public string DisplayPhoneOrEmail => !string.IsNullOrEmpty(PhoneNumber) ? PhoneNumber : Email;
     }
 }

@@ -19,7 +19,15 @@
                 <DataTemplate DataType="{x:Type viewmodels:NewContactViewModel}">
                     <views:NewContactView/>
                 </DataTemplate>
-                
+
+                <DataTemplate DataType="{x:Type viewmodels:ContactDetailViewModel}">
+                    <views:ContactDetailView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewmodels:EditContactViewModel}">
+                    <views:EditContactView/>
+                </DataTemplate>
+
             </ContentControl.Resources>
         </ContentControl>
     </Grid>

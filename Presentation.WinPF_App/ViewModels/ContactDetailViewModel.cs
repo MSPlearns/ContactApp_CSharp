@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Presentation.WinPF_App.ViewModels
@@ -7,9 +8,11 @@ namespace Presentation.WinPF_App.ViewModels
     public partial class ContactDetailViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
+        [ObservableProperty]
+        private Contact _selectedContact = new();
 
         [ObservableProperty]
-        private string _title = "Full Name";
+        private string _title = "detail";
 
         public ContactDetailViewModel(IServiceProvider serviceProvider)
         {
@@ -23,10 +26,12 @@ namespace Presentation.WinPF_App.ViewModels
             mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
         }
         [RelayCommand]
-        private void EditContact()
+        private void EditContact(Contact contact)
         {
+            var editContactViewModel = _serviceProvider.GetRequiredService<EditContactViewModel>();
+            editContactViewModel.SelectedContact = contact;
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<NewContactViewModel>();
+            mainViewModel.CurrentViewModel = editContactViewModel;
         }
         [RelayCommand]
         private void DeleteContact()

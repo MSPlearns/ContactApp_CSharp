@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Business.Helpers;
+using Business.Services;
+using DataManagement.Services;
+using Domain.Factories;
+using Domain.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Presentation.WinPF_App.ViewModels;
 using Presentation.WinPF_App.Views;
@@ -16,6 +21,12 @@ namespace Presentation.WinPF_App
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((services) =>
                 {
+                    services.AddSingleton<IUniqueIdentifierGenerator, UniqueIdentifierGenerator>();
+                    services.AddSingleton<IContactFactory, ContactFactory>();
+                    services.AddSingleton<IDataService, DataService>();
+                    services.AddSingleton<IContactService, ContactService>();
+                    //services.AddTransient<Contact>();
+
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();
 
@@ -24,6 +35,12 @@ namespace Presentation.WinPF_App
 
                     services.AddTransient<NewContactViewModel>();
                     services.AddTransient<NewContactView>();
+
+                    services.AddTransient<ContactDetailViewModel>();
+                    services.AddTransient<ContactDetailView>();
+
+                    services.AddTransient<EditContactViewModel>();
+                    services.AddTransient<EditContactView>();
                 })
                 .Build();
         }

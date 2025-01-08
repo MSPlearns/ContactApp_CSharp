@@ -14,8 +14,8 @@ namespace Business.Services
     public class ContactService : IContactService
     {
         private List<Contact> _contacts = [];
-        private IDataService _fileService;
-        private IContactFactory _contactFactory;
+        private readonly IDataService _fileService;
+        private readonly IContactFactory _contactFactory;
 
         public ContactService(IContactFactory contactFactory, IDataService dataService)
         {
@@ -33,7 +33,7 @@ namespace Business.Services
             if (contact != null)
             {
 
-                //TO DO: ADD A CHECK TO SEE IF THE USER ALREADY EXISTS
+                //TODO: ADD A CHECK TO SEE IF THE USER ALREADY EXISTS
                 _contacts.Add(contact);
                 _fileService.SaveListToFile<Contact>(_contacts);
                 return true;

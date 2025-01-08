@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Presentation.WinPF_App.Views"
              xmlns:viewmodels="clr-namespace:Presentation.WinPF_App.ViewModels"
+             xmlns:models="clr-namespace:Domain.Models;assembly=Domain"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=viewmodels:ContactsViewModel}"
              mc:Ignorable="d" 
              Background="White"
@@ -26,8 +28,53 @@
             <ColumnDefinition Width="15"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Title}" FontSize="28" TextAlignment="Center"/>
+        <TextBlock Grid.Column="2" Grid.Row="1" Text="Contacts" FontSize="28" TextAlignment="Center"/>
 
+        <ListView Grid.Column="2" Grid.Row="2" ItemsSource="{Binding Contacts}" Margin="0 20 0 0" HorizontalContentAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="models:Contact">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding FullName}"/>
+                            <TextBlock Text="{Binding DisplayPhoneOrEmail}" FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button CommandParameter="{Binding .}" Command="{Binding DataContext.EditContactCommand, 
+                                RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                 Content="&#xE70F;" FontFamily="Segoe MDL2 Assets" Padding="7 0" 
+                                    Background="Transparent" />
+                            <Button CommandParameter="{Binding .}" Command="{Binding DataContext.DeleteContactCommandEditContactCommand, 
+                                RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" Padding="7 0" 
+                                    Background="Transparent" />
+                        </StackPanel>
+                        <!-- I wanted the ContactDetailView to open when clicking on the contact, 
+                        so I asked copilot. It gave me an event-based solution, which seemed 
+                        to go against what we are trying to achieve with MVVM. When asked about 
+                        solutions that comply with MVVM best practice, it mentioned a NuGet package 
+                        that allows to implement Behaviours, such as binding an event to a command.
+
+                        This bit is therefore AI generated then edited to match my DataContext. 
+                        It triggers an event (click) and calls a command, 
+                        so that the view and the viewmodel logic can stay separated-->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding DataContext.GoToContactDetailCommand, 
+                                    RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding .}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <!-- End of AI generated code  -->
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        
         <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Vertical">
             
         </StackPanel>
