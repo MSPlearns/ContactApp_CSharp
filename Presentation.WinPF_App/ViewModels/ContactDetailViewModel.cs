@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Business.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,8 +37,19 @@ namespace Presentation.WinPF_App.ViewModels
         [RelayCommand]
         private void DeleteContact()
         {
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
+            try
+            {
+                var contactService = _serviceProvider.GetRequiredService<IContactService>();
+                if (contactService.Delete(SelectedContact))
+                {
+                    var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+                    mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

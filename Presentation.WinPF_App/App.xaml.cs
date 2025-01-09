@@ -25,8 +25,7 @@ namespace Presentation.WinPF_App
                     services.AddSingleton<IContactFactory, ContactFactory>();
                     services.AddSingleton<IDataService, DataService>();
                     services.AddSingleton<IContactService, ContactService>();
-                    //services.AddTransient<Contact>();
-
+                  
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();
 

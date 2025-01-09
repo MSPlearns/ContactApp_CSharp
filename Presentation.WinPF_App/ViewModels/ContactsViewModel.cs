@@ -34,7 +34,16 @@ namespace Presentation.WinPF_App.ViewModels
         [RelayCommand]
         private void DeleteContact(Contact contact)
         {
-            //Logic to delete
+            try
+            {
+                SelectedContact = contact;
+                if (_contactService.Delete(SelectedContact)) 
+                    RefreshContacts();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         [RelayCommand]
         private void EditContact(Contact contact)
@@ -57,6 +66,10 @@ namespace Presentation.WinPF_App.ViewModels
 
         }
 
-        
+        private void RefreshContacts()
+        {
+            Contacts = new ObservableCollection<Contact>(_contactService.GetAll());
+        }
+
     }
 }

@@ -48,12 +48,12 @@
                                 RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                  Content="&#xE70F;" FontFamily="Segoe MDL2 Assets" Padding="7 0" 
                                     Background="Transparent" />
-                            <Button CommandParameter="{Binding .}" Command="{Binding DataContext.DeleteContactCommandEditContactCommand, 
+                            <Button CommandParameter="{Binding .}" Command="{Binding DataContext.DeleteContactCommand, 
                                 RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" Padding="7 0" 
                                     Background="Transparent" />
                         </StackPanel>
-                        <!-- I wanted the ContactDetailView to open when clicking on the contact, 
+                        <!-- I wanted the ContactDetailView to open when clicking on the contact "list area", 
                         so I asked copilot. It gave me an event-based solution, which seemed 
                         to go against what we are trying to achieve with MVVM. When asked about 
                         solutions that comply with MVVM best practice, it mentioned a NuGet package 

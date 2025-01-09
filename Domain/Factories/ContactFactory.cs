@@ -7,7 +7,7 @@ namespace Domain.Factories
 {
     public class ContactFactory : IContactFactory
     {
-        private IUniqueIdentifierGenerator UniqueIdentifierGenerator { get; }
+        private readonly IUniqueIdentifierGenerator UniqueIdentifierGenerator;
 
         public ContactFactory(IUniqueIdentifierGenerator UIG)
         {

@@ -7,7 +7,7 @@
              xmlns:viewmodels="clr-namespace:Presentation.WinPF_App.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:NewContactViewModel}"
              mc:Ignorable="d" 
-                Background="White"
+             Background="White"
              d:DesignHeight="450" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -38,27 +38,41 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="First Name*" Margin="0 0 0 5"/>
-            <TextBox Text="{Binding CcForm.FirstName}" Grid.Column="0" Grid.Row="1"  Padding="4" Margin="0 0 5 0"/>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="First Name*" Margin="0 0 0 5"/>
+                <TextBox Text="{Binding CcForm.FirstName}" Grid.Column="0" Grid.Row="1"  Padding="4" Margin="0 0 5 0">
+                   
+                </TextBox>
                 
-            <TextBlock Grid.Column="1" Grid.Row="0" Text="Last Name*" Margin="5 0 0 5"/>
-                <TextBox Text="{Binding CcForm.LastName}" Grid.Column="1" Grid.Row="1" Padding="4" Margin="5 0 0 0"/>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Last Name*" Margin="5 0 0 5"/>
+                <TextBox Text="{Binding CcForm.LastName}" Grid.Column="1" Grid.Row="1" Padding="4" Margin="5 0 0 0">
+                    
+                </TextBox>
             </Grid>
 
             <TextBlock Text="Email**"/>
-            <TextBox Text="{Binding CcForm.Email}" Margin="0, 0, 0, 10" Padding="4"/>
+            <TextBox Text="{Binding CcForm.Email}" Margin="0, 0, 0, 10" Padding="4">
+               
+            </TextBox>
 
             <TextBlock Text="Phone number**"/>
-            <TextBox Text="{Binding CcForm.PhoneNumber}" Margin="0, 0, 0, 10" Padding="4"/>
+            <TextBox Text="{Binding CcForm.PhoneNumber}" Margin="0, 0, 0, 10" Padding="4">
+             
+            </TextBox>
 
             <TextBlock Text="Address"/>
-            <TextBox Text="{Binding CcForm.Address}" Height="auto" MinHeight="40" Margin="0, 0, 0, 10" Padding="4"/>
+            <TextBox Text="{Binding CcForm.Address}" Height="auto" MinHeight="40" Margin="0, 0, 0, 10" Padding="4">
+              
+            </TextBox>
 
             <TextBlock Text="Postcode"/>
-            <TextBox Text="{Binding CcForm.Postcode}" Margin="0, 0, 0, 10" Padding="4"/>
+            <TextBox Text="{Binding CcForm.Postcode}" Margin="0, 0, 0, 10" Padding="4">
+               
+            </TextBox>
 
             <TextBlock Text="City"/>
-            <TextBox Text="{Binding CcForm.City}" Margin="0, 0, 0, 10" Padding="4"/>
+            <TextBox Text="{Binding CcForm.City}" Margin="0, 0, 0, 10" Padding="4">
+              
+            </TextBox>
 
         </StackPanel>
 

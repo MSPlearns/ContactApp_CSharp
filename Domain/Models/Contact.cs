@@ -36,6 +36,6 @@ namespace Domain.Models
 
         public string FullName => $"{FirstName} {LastName}";
 
-        public string DisplayPhoneOrEmail => !string.IsNullOrEmpty(PhoneNumber) ? PhoneNumber : Email;
+        public string DisplayPhoneOrEmail => !string.IsNullOrEmpty(PhoneNumber) ? PhoneNumber : Email!;
     }
 }

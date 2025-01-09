@@ -1,13 +1,8 @@
-﻿using Business.Helpers;
-using DataManagement.Services;
+﻿using DataManagement.Services;
 using Domain.Factories;
 using Domain.Models;
 using Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Services
 {
@@ -21,6 +16,7 @@ namespace Business.Services
         {
             _contactFactory = contactFactory;
             _fileService = dataService;
+            _contacts = _fileService.LoadListFromFile<Contact>();
         }
 
         public bool Add(ContactCreationForm form) //Takes in a DTO,
@@ -30,13 +26,62 @@ namespace Business.Services
         {
             Contact contact = _contactFactory.Create(form);
             // Add user
-            if (contact != null)
+            try
             {
+                if (contact != null)
+                {
+                    //TODO: Maybe check if contact already exists (same email, same name etc)
+                    _contacts.Add(contact);
+                    _fileService.SaveListToFile<Contact>(_contacts);
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
-                //TODO: ADD A CHECK TO SEE IF THE USER ALREADY EXISTS
-                _contacts.Add(contact);
-                _fileService.SaveListToFile<Contact>(_contacts);
-                return true;
+        public bool Delete(Contact contact)
+        {
+            if (DoesExist(contact))
+            {
+                try
+                {
+                    _contacts.RemoveAll(x => x.Id == contact.Id);
+                    _fileService.SaveListToFile<Contact>(_contacts);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+            }
+            return false;
+        }
+
+        public bool Update(Contact editedContact)
+        {
+            //TODO: To avoid having two contacts with the same ID (the contact in the file/list and the edited contact) 
+            //in memory, a new dto (updateform) can be used to send edit input to...a method in contactModel(?)
+            //that updates the contact fields directly. This would require aditional testing, maybe aditional validation.
+
+            if (DoesExist(editedContact))
+            {
+                try
+                {
+                    var ogContact = GetContactById(editedContact.Id)!;
+                    int index = _contacts.IndexOf(ogContact);
+                    _contacts[index] = editedContact;
+                    _fileService.SaveListToFile<Contact>(_contacts);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
             return false;
         }
@@ -46,5 +91,19 @@ namespace Business.Services
             _contacts = _fileService.LoadListFromFile<Contact>();
             return _contacts;
         }
+
+        public bool DoesExist(Contact contact)
+        {
+            _contacts = _fileService.LoadListFromFile<Contact>();
+            return _contacts.Any(x => x.Id == contact.Id);
+
+        }
+
+        public Contact? GetContactById(string id)
+        {
+            _contacts = _fileService.LoadListFromFile<Contact>();
+            return _contacts.FirstOrDefault(x => x.Id == id);
+        }
     }
 }
+
