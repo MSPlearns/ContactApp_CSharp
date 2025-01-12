@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Domain.Factories;
 
-namespace Domain.Factories
+public interface IUniqueIdentifierGenerator
 {
-    public interface IUniqueIdentifierGenerator
-    {
-        string Generate();
-    }
+    string Generate();
 }

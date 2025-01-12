@@ -10,7 +10,7 @@
              Background="Transparent"
              d:DesignHeight="700" d:DesignWidth="450">
     <Border Background="#333335" CornerRadius="0 0 10 10" Padding="10">
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -31,7 +31,7 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <TextBlock Grid.Column="0" Grid.Row="0" Text="First Name*" Style="{StaticResource FormLabelText}"/>
                     <TextBox Text="{Binding CcForm.FirstName}" Grid.Column="0" Grid.Row="1" Margin="0 0 5 0" Style="{StaticResource InputText}">
                     </TextBox>
@@ -60,11 +60,11 @@
                 <TextBlock Text="City" Style="{StaticResource FormLabelText}"/>
                 <TextBox Text="{Binding CcForm.City}" Style="{StaticResource InputText}">
                 </TextBox>
-                
+
                 <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource FormErrorText}"/>
 
             </StackPanel>
-            
+
             <Button Grid.Row="2"  
                     Content="SAVE CONTACT"          
                     Style="{StaticResource SaveButton}"

@@ -4,52 +4,53 @@ using CommunityToolkit.Mvvm.Input;
 using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Presentation.WinPF_App.ViewModels
+namespace Presentation.WinPF_App.ViewModels;
+public partial class ContactDetailViewModel : ObservableObject
 {
-    public partial class ContactDetailViewModel : ObservableObject
+    private readonly IServiceProvider _serviceProvider;
+
+    [ObservableProperty]
+    private Contact _selectedContact = new();
+
+    [ObservableProperty]
+    private string _title = "detail";
+
+    public ContactDetailViewModel(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
-        [ObservableProperty]
-        private Contact _selectedContact = new();
+        _serviceProvider = serviceProvider;
+    }
 
-        [ObservableProperty]
-        private string _title = "detail";
+    [RelayCommand]
+    private void EditContact(Contact contact)
+    {
+        var editContactViewModel = _serviceProvider.GetRequiredService<EditContactViewModel>();
+        editContactViewModel.SelectedContact = contact;
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = editContactViewModel;
+    }
 
-        public ContactDetailViewModel(IServiceProvider serviceProvider)
+    [RelayCommand]
+    private void DeleteContact()
+    {
+        try
         {
-            _serviceProvider = serviceProvider;
-        }
-
-        [RelayCommand]
-        private void GoToContacts()
-        {
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
-        }
-        [RelayCommand]
-        private void EditContact(Contact contact)
-        {
-            var editContactViewModel = _serviceProvider.GetRequiredService<EditContactViewModel>();
-            editContactViewModel.SelectedContact = contact;
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = editContactViewModel;
-        }
-        [RelayCommand]
-        private void DeleteContact()
-        {
-            try
+            var contactService = _serviceProvider.GetRequiredService<IContactService>();
+            if (contactService.Delete(SelectedContact))
             {
-                var contactService = _serviceProvider.GetRequiredService<IContactService>();
-                if (contactService.Delete(SelectedContact))
-                {
-                    var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-                    mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+                mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
             }
         }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    [RelayCommand]
+    private void GoToContacts()
+    {
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
     }
 }

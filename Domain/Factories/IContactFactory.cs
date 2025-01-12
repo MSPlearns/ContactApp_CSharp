@@ -1,10 +1,8 @@
 ﻿using Domain.Models;
 using Dtos;
 
-namespace Domain.Factories
+namespace Domain.Factories;
+public interface IContactFactory
 {
-    public interface IContactFactory
-    {
-        Contact Create(ContactCreationForm form);
-    }
+    Contact Create(ContactCreationForm form);
 }

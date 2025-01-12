@@ -2,98 +2,92 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Domain.Models;
-using Dtos;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Presentation.WinPF_App.ViewModels
+namespace Presentation.WinPF_App.ViewModels;
+public partial class EditContactViewModel : ObservableObject
 {
-    public partial class EditContactViewModel : ObservableObject
+    private readonly IServiceProvider _serviceProvider;
+
+    [ObservableProperty]
+    private Contact _selectedContact = new();
+
+
+    [ObservableProperty]
+    private string _errorMessage;
+
+    public EditContactViewModel(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+        _errorMessage = "";
+    }
 
-        [ObservableProperty]
-        private Contact _selectedContact = new();
-
-
-        [ObservableProperty]
-        private string _errorMessage;
-
-        public EditContactViewModel(IServiceProvider serviceProvider)
+    [RelayCommand]
+    private void SaveContact()
+    {
+        if (ValidateForm(SelectedContact))
         {
-            _serviceProvider = serviceProvider;
-            _errorMessage = "";
-
-        }
-
-        [RelayCommand]
-        private void SaveContact()
-        {
-            if (ValidateForm(SelectedContact))
+            try
             {
-                try
+                var contactService = _serviceProvider.GetRequiredService<IContactService>();
+                if (contactService.Update(SelectedContact))
                 {
-                    var contactService = _serviceProvider.GetRequiredService<IContactService>();
-                    if (contactService.Update(SelectedContact))
-                    {
-                        GoToContactDetail();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(
-                    $"Something went wrong:\n{ex.Message}",
-                    "Unknown error",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning
-                    );
+                    GoToContactDetail();
                 }
             }
-        }
-
-        [RelayCommand]
-        private void GoToContactDetail()
-        {
-            var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
-            contactDetailViewModel.SelectedContact = SelectedContact;
-
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = contactDetailViewModel;
-        }
-
-        private bool ValidateForm(Contact editedContact)
-        {
-            bool allPropertiesValid = true;
-            var context = new ValidationContext(new Contact());
-            var validationResults = new List<ValidationResult>();
-            var validationErrors = new List<string>();
-
-            foreach (var property in typeof(Contact).GetProperties())
+            catch (Exception ex)
             {
-                context.MemberName = property.Name;
-                if (!Validator.TryValidateProperty(property.GetValue(editedContact), context, validationResults))
-                {
-                    allPropertiesValid = false;
-                }
+                System.Windows.MessageBox.Show(
+                $"Something went wrong:\n{ex.Message}",
+                "Unknown error",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+                );
             }
+        }
+    }
 
-            if (!allPropertiesValid)
-            {
-                foreach (ValidationResult result in validationResults)
-                {
-                    validationErrors.Add(result!.ErrorMessage!);
-                }
-            }
+    [RelayCommand]
+    private void GoToContactDetail()
+    {
+        var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
+        contactDetailViewModel.SelectedContact = SelectedContact;
 
-            if (string.IsNullOrEmpty(editedContact.Email) && string.IsNullOrEmpty(editedContact.PhoneNumber))
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = contactDetailViewModel;
+    }
+
+    private bool ValidateForm(Contact editedContact)
+    {
+        bool allPropertiesValid = true;
+        var context = new ValidationContext(new Contact());
+        var validationResults = new List<ValidationResult>();
+        var validationErrors = new List<string>();
+
+        foreach (var property in typeof(Contact).GetProperties())
+        {
+            context.MemberName = property.Name;
+            if (!Validator.TryValidateProperty(property.GetValue(editedContact), context, validationResults))
             {
-                validationErrors.Add("*Either email or phone number must be provided");
                 allPropertiesValid = false;
             }
-            ErrorMessage = string.Join(Environment.NewLine, validationErrors);
-            return allPropertiesValid;
         }
 
+        if (!allPropertiesValid)
+        {
+            foreach (ValidationResult result in validationResults)
+            {
+                validationErrors.Add(result!.ErrorMessage!);
+            }
+        }
+
+        if (string.IsNullOrEmpty(editedContact.Email) && string.IsNullOrEmpty(editedContact.PhoneNumber))
+        {
+            validationErrors.Add("*Either email or phone number must be provided");
+            allPropertiesValid = false;
+        }
+        ErrorMessage = string.Join(Environment.NewLine, validationErrors);
+        return allPropertiesValid;
     }
 }

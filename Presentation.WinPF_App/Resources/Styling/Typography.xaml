@@ -59,6 +59,7 @@
                         <ScrollViewer x:Name="PART_ContentHost" 
                                   VerticalScrollBarVisibility="Hidden" 
                                   HorizontalScrollBarVisibility="Hidden" />
+                        <!--End of AI generated code-->
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -69,7 +70,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
 
     <!--Input text area-->
     <Style x:Key="InputArea" TargetType="TextBox" BasedOn="{StaticResource InputText}">
@@ -102,7 +102,7 @@
     </Style>
 
     <!--ListView Item Container Style-->
-    <!--CODE from https://stackoverflow.com/a/74716659, slightly modified-->
+        <!--CODE from https://stackoverflow.com/a/74716659, slightly modified-->
     <Style x:Key="ListViewContainerStyle" TargetType="{x:Type ListViewItem}">
         <Setter Property="Template">
             <Setter.Value>
@@ -122,7 +122,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+        <!--End of code from StackOverflow-->
+    
     <!--ListView Style-->
     <Style x:Key="ListViewStyle" TargetType="ListView">
         <Setter Property="Background" Value="#44434F" />
@@ -130,8 +131,4 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewContainerStyle}"/>
     </Style>
-
-    
-    
-
 </ResourceDictionary>

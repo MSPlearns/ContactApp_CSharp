@@ -5,100 +5,94 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Domain.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.ObjectModel;
 
-namespace Presentation.WinPF_App.ViewModels
+namespace Presentation.WinPF_App.ViewModels;
+//TODO: Some sort of shared validation class that could be used in all contact forms? With overloaded methods for different types of context?
+public partial class NewContactViewModel : ObservableObject
 {
-    //TODO: Some sort of shared validation class that could be used in all contact forms? With overloaded methods for different types of context?
-    public partial class NewContactViewModel : ObservableObject
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IContactService _contactService;
+
+    [ObservableProperty]
+    private ContactCreationForm _ccForm = new();
+
+    [ObservableProperty]
+    private string _errorMessage;
+
+    [ObservableProperty]
+    private string _headline = "ADD NEW CONTACT";
+
+    public NewContactViewModel(IServiceProvider serviceProvider, IContactService contactService)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IContactService _contactService;
-        [ObservableProperty]
-        private ContactCreationForm _ccForm = new();
+        _serviceProvider = serviceProvider;
+        _contactService = contactService;
+        _errorMessage = "";
+    }
 
-        [ObservableProperty]
-        private string _errorMessage;
-
-        [ObservableProperty]
-        private string _headline = "ADD NEW CONTACT";
-
-
-
-        public NewContactViewModel(IServiceProvider serviceProvider, IContactService contactService)
+    [RelayCommand]
+    private void SaveContact()
+    {
+        if (ValidateForm(CcForm))
         {
-            _serviceProvider = serviceProvider;
-            _contactService = contactService;
-            _errorMessage = "";
-
-        }
-
-        [RelayCommand]
-        private void SaveContact()
-        {
-            if (ValidateForm(CcForm))
+            try
             {
-                try
-                {
-                    var result = _contactService.Add(CcForm);
+                var result = _contactService.Add(CcForm);
 
-                    if (result)
-                    {
-                        GoToContacts();
-                    }
-                }
-                catch (Exception ex)
+                if (result)
                 {
-                    System.Windows.MessageBox.Show(
-                    $"Something went wrong:\n{ex.Message}",
-                    "Unknown error",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning
-                    );
+                    GoToContacts();
                 }
             }
-
-        }
-        [RelayCommand]
-        private void GoToContacts()
-        {
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
-        }
-
-        private bool ValidateForm(ContactCreationForm form)
-        {
-            bool sucessful = true;
-            var context = new ValidationContext(new Contact());
-            var validationResults = new List<ValidationResult>();
-            var validationErrors = new List<string>();
-
-
-            foreach (var property in typeof(ContactCreationForm).GetProperties())
+            catch (Exception ex)
             {
-                context.MemberName = property.Name;
-                if(!Validator.TryValidateProperty(property.GetValue(form), context, validationResults))
-                {
-                    sucessful = false;
-                }
-
+                System.Windows.MessageBox.Show(
+                $"Something went wrong:\n{ex.Message}",
+                "Unknown error",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+                );
             }
+        }
+    }
 
-            if (!sucessful)
-            {
-                foreach (ValidationResult result in validationResults)
-                {
-                    validationErrors.Add(result!.ErrorMessage!);
-                }
-            }
+    [RelayCommand]
+    private void GoToContacts()
+    {
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
+    }
 
-            if (string.IsNullOrEmpty(form.Email) && string.IsNullOrEmpty(form.PhoneNumber))
+    private bool ValidateForm(ContactCreationForm form)
+    {
+        bool sucessful = true;
+        var context = new ValidationContext(new Contact());
+        var validationResults = new List<ValidationResult>();
+        var validationErrors = new List<string>();
+
+        foreach (var property in typeof(ContactCreationForm).GetProperties())
+        {
+            context.MemberName = property.Name;
+            if (!Validator.TryValidateProperty(property.GetValue(form), context, validationResults))
             {
-                validationErrors.Add("*Either email or phone number must be provided");
                 sucessful = false;
             }
-            ErrorMessage = string.Join(Environment.NewLine, validationErrors);
-            return sucessful;
         }
+
+        if (!sucessful)
+        {
+            foreach (ValidationResult result in validationResults)
+            {
+                validationErrors.Add(result!.ErrorMessage!);
+            }
+        }
+
+        if (string.IsNullOrEmpty(form.Email) && string.IsNullOrEmpty(form.PhoneNumber))
+        {
+            validationErrors.Add("*Either email or phone number must be provided");
+            sucessful = false;
+        }
+
+        ErrorMessage = string.Join(Environment.NewLine, validationErrors);
+        return sucessful;
     }
 }

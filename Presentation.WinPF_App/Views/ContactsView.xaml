@@ -14,13 +14,10 @@
     <Border Background="#333335" CornerRadius="0 0 10 10" Padding="10">
         <Grid>
             <Grid.RowDefinitions>
-
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-
             </Grid.RowDefinitions>
-
 
             <TextBlock Grid.Row="0" Text="{Binding Headline, FallbackValue='CONTACT LIST'}" Style="{StaticResource HeadlineText}" Margin=" 0 0 0 20"/>
 

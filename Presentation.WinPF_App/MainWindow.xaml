@@ -43,7 +43,7 @@
                     <DataTemplate DataType="{x:Type viewmodels:GetStartedViewModel}">
                         <views:GetStartedView/>
                     </DataTemplate>
-                    
+
                     <DataTemplate DataType="{x:Type viewmodels:ContactsViewModel}">
                         <views:ContactsView/>
                     </DataTemplate>
@@ -59,13 +59,8 @@
                     <DataTemplate DataType="{x:Type viewmodels:EditContactViewModel}">
                         <views:EditContactView/>
                     </DataTemplate>
-
-                    
-
                 </ContentControl.Resources>
             </ContentControl>
         </Grid>
     </Border>
-
-
 </Window>

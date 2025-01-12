@@ -5,74 +5,71 @@ using Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
-namespace Presentation.WinPF_App.ViewModels
+namespace Presentation.WinPF_App.ViewModels;
+public partial class ContactsViewModel : ObservableObject
 {
-    public partial class ContactsViewModel : ObservableObject
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IContactService _contactService;
+
+    [ObservableProperty]
+    private ObservableCollection<Contact> _contacts = [];
+
+    [ObservableProperty]
+    private Contact _selectedContact = null!;
+
+    [ObservableProperty]
+    private string _headline = "CONTACT LIST";
+
+    public ContactsViewModel(IServiceProvider serviceProvider, IContactService contactService)
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IContactService _contactService;
+        _serviceProvider = serviceProvider;
+        _contactService = contactService;
+        _contacts = new ObservableCollection<Contact>(_contactService.GetAll());
+    }
 
-        [ObservableProperty]
-        private ObservableCollection<Contact> _contacts = [];
-
-        [ObservableProperty]
-        private Contact _selectedContact = null!;
-
-        [ObservableProperty]
-        private string _headline = "CONTACT LIST";
-
-        public ContactsViewModel(IServiceProvider serviceProvider, IContactService contactService)
+    [RelayCommand]
+    private void DeleteContact(Contact contact)
+    {
+        try
         {
-            _serviceProvider = serviceProvider;
-            _contactService = contactService;
-            _contacts = new ObservableCollection<Contact>(_contactService.GetAll());
+            SelectedContact = contact;
+            if (_contactService.Delete(SelectedContact)) 
+                RefreshContacts(); // There's probably a better way to do this
         }
-
-        [RelayCommand]
-        private void GoToNewContact()
+        catch (Exception)
         {
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<NewContactViewModel>();
+            throw;
         }
-        [RelayCommand]
-        private void DeleteContact(Contact contact)
-        {
-            try
-            {
-                SelectedContact = contact;
-                if (_contactService.Delete(SelectedContact)) 
-                    RefreshContacts();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-        [RelayCommand]
-        private void EditContact(Contact contact)
-        {
-            var editContactViewModel = _serviceProvider.GetRequiredService<EditContactViewModel>();
-            editContactViewModel.SelectedContact = contact;
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = editContactViewModel;
-        }
+    }
+    [RelayCommand]
+    private void EditContact(Contact contact)
+    {
+        var editContactViewModel = _serviceProvider.GetRequiredService<EditContactViewModel>();
+        editContactViewModel.SelectedContact = contact;
 
-        [RelayCommand]
-        private void GoToContactDetail(Contact contact)
-        {
-            var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
-            contactDetailViewModel.SelectedContact = contact;
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = editContactViewModel;
+    }
 
-            var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-            mainViewModel.CurrentViewModel = contactDetailViewModel;
-            
+    [RelayCommand]
+    private void GoToContactDetail(Contact contact)
+    {
+        var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
+        contactDetailViewModel.SelectedContact = contact;
 
-        }
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = contactDetailViewModel;
+    }
 
-        private void RefreshContacts()
-        {
-            Contacts = new ObservableCollection<Contact>(_contactService.GetAll());
-        }
+    private void RefreshContacts()
+    {
+        Contacts = new ObservableCollection<Contact>(_contactService.GetAll());
+    }
 
+    [RelayCommand]
+    private void GoToNewContact()
+    {
+        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
+        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<NewContactViewModel>();
     }
 }

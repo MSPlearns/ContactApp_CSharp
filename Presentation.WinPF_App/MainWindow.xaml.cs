@@ -22,7 +22,6 @@ public partial class MainWindow : Window
     private void ExitButton_Click(object sender, RoutedEventArgs e)
     {
         Environment.Exit(0);
-
     }
 
     private void MinimiseButton_Click(object sender, RoutedEventArgs e)

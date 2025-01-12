@@ -1,16 +1,14 @@
 ﻿using Domain.Models;
-namespace Presentation.ConsoleApp
-{
-    public interface ITextDisplayService
-    {
-        void Header(string text);
-        string ToSentenceCase(string text);
-        void AwaitKeyPress();
-        void Selected(string option);
-        void ConfirmationMessage(string message);
-        void ErrorMessage(string message);
-        void ContactList(int index, Contact contact);
-        void ClearConsoleLines(int linesToClear);
 
-    }
+namespace Presentation.ConsoleApp;
+public interface ITextDisplayService
+{
+    void AwaitKeyPress();
+    void ClearConsoleLines(int linesToClear);
+    void ConfirmationMessage(string message);
+    void ContactList(int index, Contact contact);
+    void ErrorMessage(string message);
+    void Header(string text);
+    void Selected(string option);
+    string ToSentenceCase(string text);
 }

@@ -1,7 +1,5 @@
-﻿namespace Presentation.ConsoleApp
+﻿namespace Presentation.ConsoleApp;
+public interface IMenuService
 {
-    public interface IMenuService
-    {
-        void Show();
-    }
+    void Show();
 }

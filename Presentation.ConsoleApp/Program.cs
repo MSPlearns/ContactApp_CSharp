@@ -9,9 +9,9 @@ using Presentation.ConsoleApp;
 var host = Host.CreateDefaultBuilder()
     .ConfigureServices((context, services) =>
     {
-       services.AddSingleton<IUniqueIdentifierGenerator, UniqueIdentifierGenerator>();
+        services.AddSingleton<IUniqueIdentifierGenerator, UniqueIdentifierGenerator>();
         services.AddSingleton<IContactFactory, ContactFactory>();
-        services.AddSingleton<IDataService, DataService>();
+        services.AddTransient<IDataService, DataService>();
         services.AddSingleton<IContactService, ContactService>();
         services.AddSingleton<ITextDisplayService, TextDisplayService>();
         services.AddTransient<IMenuService, MenuService>();
