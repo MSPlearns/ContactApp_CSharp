@@ -18,6 +18,9 @@ namespace Presentation.WinPF_App.ViewModels
         [ObservableProperty]
         private Contact _selectedContact = null!;
 
+        [ObservableProperty]
+        private string _headline = "CONTACT LIST";
+
         public ContactsViewModel(IServiceProvider serviceProvider, IContactService contactService)
         {
             _serviceProvider = serviceProvider;

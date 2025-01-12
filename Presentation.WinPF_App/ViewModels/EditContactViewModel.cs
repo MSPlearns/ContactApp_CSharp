@@ -16,14 +16,15 @@ namespace Presentation.WinPF_App.ViewModels
         [ObservableProperty]
         private Contact _selectedContact = new();
 
+
         [ObservableProperty]
-        private ObservableCollection<string> _validationErrors;
+        private string _errorMessage;
 
         public EditContactViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _validationErrors = [];
-            
+            _errorMessage = "";
+
         }
 
         [RelayCommand]
@@ -36,33 +37,26 @@ namespace Presentation.WinPF_App.ViewModels
                     var contactService = _serviceProvider.GetRequiredService<IContactService>();
                     if (contactService.Update(SelectedContact))
                     {
-                        var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-                        mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
+                        GoToContactDetail();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
-                }
-            }
-            else
-            {
-                string errorMessage = string.Join(Environment.NewLine, ValidationErrors);
-                System.Windows.MessageBox.Show(
-                    $"Failed to save the contact:\n{errorMessage}",
-                    "Validation Errors",
+                    System.Windows.MessageBox.Show(
+                    $"Something went wrong:\n{ex.Message}",
+                    "Unknown error",
                     System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Warning
-                );
+                    );
+                }
             }
-
         }
 
         [RelayCommand]
-        private void GoToContactDetail(Contact contact)
+        private void GoToContactDetail()
         {
             var contactDetailViewModel = _serviceProvider.GetRequiredService<ContactDetailViewModel>();
-            contactDetailViewModel.SelectedContact = contact;
+            contactDetailViewModel.SelectedContact = SelectedContact;
 
             var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
             mainViewModel.CurrentViewModel = contactDetailViewModel;
@@ -70,32 +64,35 @@ namespace Presentation.WinPF_App.ViewModels
 
         private bool ValidateForm(Contact editedContact)
         {
-            ValidationErrors.Clear();
-            bool sucessful = true;
+            bool allPropertiesValid = true;
             var context = new ValidationContext(new Contact());
             var validationResults = new List<ValidationResult>();
+            var validationErrors = new List<string>();
 
             foreach (var property in typeof(Contact).GetProperties())
             {
                 context.MemberName = property.Name;
-                sucessful = !Validator.TryValidateProperty(property.GetValue(editedContact), context, validationResults) ? false : sucessful;
-
+                if (!Validator.TryValidateProperty(property.GetValue(editedContact), context, validationResults))
+                {
+                    allPropertiesValid = false;
+                }
             }
 
-            if (!sucessful)
+            if (!allPropertiesValid)
             {
                 foreach (ValidationResult result in validationResults)
                 {
-                    ValidationErrors.Add(result!.ErrorMessage);
+                    validationErrors.Add(result!.ErrorMessage!);
                 }
             }
 
             if (string.IsNullOrEmpty(editedContact.Email) && string.IsNullOrEmpty(editedContact.PhoneNumber))
             {
-                ValidationErrors.Add("*Either email or phone number must be provided");
-                sucessful = false;
+                validationErrors.Add("*Either email or phone number must be provided");
+                allPropertiesValid = false;
             }
-            return sucessful;
+            ErrorMessage = string.Join(Environment.NewLine, validationErrors);
+            return allPropertiesValid;
         }
 
     }

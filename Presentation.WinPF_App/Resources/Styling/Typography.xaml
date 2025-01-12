@@ -1,0 +1,137 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--Title-->
+    <Style x:Key="TitleText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="LightGray" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!--Headline-->
+    <Style x:Key="HeadlineText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="26" />
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="LightGray" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!--Form Label-->
+    <Style x:Key="FormLabelText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="LightGray" />
+        <Setter Property="Margin" Value="5 0 0 5"/>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="TextAlignment" Value="Left" />
+    </Style>
+    
+    <!--Form Error-->
+    <Style x:Key="FormErrorText" TargetType="TextBlock" BasedOn="{StaticResource FormLabelText}">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Foreground" Value="#EA79AC" />
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!--Input Text Field-->
+    <Style x:Key="InputText" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Foreground" Value="DarkGray" />
+        <Setter Property="Background" Value="#44434F" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Margin" Value="0 0 0 5"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}" 
+                            Padding="{TemplateBinding Padding}" 
+                            CornerRadius="10">
+                        <!-- AI GENERATED because my cursor/caret dissapeared when I added the ControlTemplate (it overrides standard behaviour). It makes the caret appear :) -->
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                  VerticalScrollBarVisibility="Hidden" 
+                                  HorizontalScrollBarVisibility="Hidden" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Background" Value="#5A5965"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <!--Input text area-->
+    <Style x:Key="InputArea" TargetType="TextBox" BasedOn="{StaticResource InputText}">
+        <Setter Property="Height" Value="70" />
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!--List Contact name-->
+    <Style x:Key="ListContactNameText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Foreground" Value="LightGray" />
+    </Style>
+
+    <!--List Contact phone/email-->
+    <Style x:Key="ListMainContactForm" TargetType="TextBlock" BasedOn="{StaticResource ListContactNameText}">
+        <Setter Property="FontSize" Value="10" />
+    </Style>
+
+    <!--Detail Contact phone/email-->
+    <Style x:Key="ContactDetailRequired" TargetType="TextBlock" BasedOn="{StaticResource ListContactNameText}">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Margin" Value="20 10 10 10"/>
+    </Style>
+
+    <!--Detail Contact address details-->
+    <Style x:Key="ContactDetailNonRequired" TargetType="TextBlock" BasedOn="{StaticResource ListMainContactForm}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="35 5 5 5"/>
+    </Style>
+
+    <!--ListView Item Container Style-->
+    <!--CODE from https://stackoverflow.com/a/74716659, slightly modified-->
+    <Style x:Key="ListViewContainerStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="Bd" Value="#5A5965"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" TargetName="Bd" Value="#78777F"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--ListView Style-->
+    <Style x:Key="ListViewStyle" TargetType="ListView">
+        <Setter Property="Background" Value="#44434F" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewContainerStyle}"/>
+    </Style>
+
+    
+    
+
+</ResourceDictionary>

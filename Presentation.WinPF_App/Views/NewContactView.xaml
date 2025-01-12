@@ -7,83 +7,76 @@
              xmlns:viewmodels="clr-namespace:Presentation.WinPF_App.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:NewContactViewModel}"
              mc:Ignorable="d" 
-             Background="White"
-             d:DesignHeight="450" d:DesignWidth="300">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="15"/>
-        </Grid.RowDefinitions>
+             Background="Transparent"
+             d:DesignHeight="700" d:DesignWidth="450">
+    <Border Background="#333335" CornerRadius="0 0 10 10" Padding="10">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="15"/>
-        </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Text="{Binding Headline, FallbackValue='NEW CONTACT'}" Style="{StaticResource HeadlineText}" Margin=" 0 0 0 20"/>
 
-        <TextBlock Grid.Column="2" Grid.Row="1" Text="New Contact" FontSize="28" TextAlignment="Center"/>
+            <StackPanel  Grid.Row="1" Orientation="Vertical" Margin="0 10 0 0">
+                <Grid Margin="0 0 0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="First Name*" Style="{StaticResource FormLabelText}"/>
+                    <TextBox Text="{Binding CcForm.FirstName}" Grid.Column="0" Grid.Row="1" Margin="0 0 5 0" Style="{StaticResource InputText}">
+                    </TextBox>
 
-        <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Vertical" Margin="0 10 0 0">
-            <Grid Margin="0 0 0 10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="First Name*" Margin="0 0 0 5"/>
-                <TextBox Text="{Binding CcForm.FirstName}" Grid.Column="0" Grid.Row="1"  Padding="4" Margin="0 0 5 0">
-                   
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Last Name*" Style="{StaticResource FormLabelText}"/>
+                    <TextBox Text="{Binding CcForm.LastName}" Grid.Column="1" Grid.Row="1" Margin="5 0 0 0" Style="{StaticResource InputText}">
+                    </TextBox>
+                </Grid>
+
+                <TextBlock Text="Email**" Style="{StaticResource FormLabelText}"/>
+                <TextBox Text="{Binding CcForm.Email}" Style="{StaticResource InputText}">
+                </TextBox>
+
+                <TextBlock Text="Phone number**" Style="{StaticResource FormLabelText}"/>
+                <TextBox Text="{Binding CcForm.PhoneNumber}" Style="{StaticResource InputText}">
+                </TextBox>
+
+                <TextBlock Text="Address" Style="{StaticResource FormLabelText}"/>
+                <TextBox Text="{Binding CcForm.Address}"  Style="{StaticResource InputArea}">
+                </TextBox>
+
+                <TextBlock Text="Postcode" Style="{StaticResource FormLabelText}"/>
+                <TextBox Text="{Binding CcForm.Postcode}" Style="{StaticResource InputText}">
+                </TextBox>
+
+                <TextBlock Text="City" Style="{StaticResource FormLabelText}"/>
+                <TextBox Text="{Binding CcForm.City}" Style="{StaticResource InputText}">
                 </TextBox>
                 
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="Last Name*" Margin="5 0 0 5"/>
-                <TextBox Text="{Binding CcForm.LastName}" Grid.Column="1" Grid.Row="1" Padding="4" Margin="5 0 0 0">
-                    
-                </TextBox>
-            </Grid>
+                <TextBlock Text="{Binding ErrorMessage}" Style="{StaticResource FormErrorText}"/>
 
-            <TextBlock Text="Email**"/>
-            <TextBox Text="{Binding CcForm.Email}" Margin="0, 0, 0, 10" Padding="4">
-               
-            </TextBox>
+            </StackPanel>
+            
+            <Button Grid.Row="2"  
+                    Content="SAVE CONTACT"          
+                    Style="{StaticResource SaveButton}"
+                    Margin="4"
+                    Command="{Binding SaveContactCommand}"/>
 
-            <TextBlock Text="Phone number**"/>
-            <TextBox Text="{Binding CcForm.PhoneNumber}" Margin="0, 0, 0, 10" Padding="4">
-             
-            </TextBox>
-
-            <TextBlock Text="Address"/>
-            <TextBox Text="{Binding CcForm.Address}" Height="auto" MinHeight="40" Margin="0, 0, 0, 10" Padding="4">
-              
-            </TextBox>
-
-            <TextBlock Text="Postcode"/>
-            <TextBox Text="{Binding CcForm.Postcode}" Margin="0, 0, 0, 10" Padding="4">
-               
-            </TextBox>
-
-            <TextBlock Text="City"/>
-            <TextBox Text="{Binding CcForm.City}" Margin="0, 0, 0, 10" Padding="4">
-              
-            </TextBox>
-
-        </StackPanel>
-
-        <Grid Grid.Column="2" Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"  Content="Save Contact" Padding="5" Margin="2.5" Command="{Binding SaveContactCommand}"/>
-            <Button Grid.Column="1"  Content="Cancel" Padding="5" Margin="2.5" Command="{Binding GoToContactsCommand}"/>
+            <Button Grid.Row="3"  
+                    Content="Cancel"  
+                    HorizontalAlignment="Stretch"
+                    Margin="4"
+                    Style="{StaticResource CancelButton}" 
+                    Command="{Binding GoToContactsCommand}"/>
         </Grid>
-        
-    </Grid>
+    </Border>
 </UserControl>

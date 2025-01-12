@@ -7,28 +7,65 @@
         xmlns:viewmodels="clr-namespace:Presentation.WinPF_App.ViewModels"
         xmlns:views="clr-namespace:Presentation.WinPF_App.Views"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="300">
-    <Grid>
-        <ContentControl Content="{Binding CurrentViewModel}">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type viewmodels:ContactsViewModel}">
-                    <views:ContactsView/>
-                </DataTemplate>
+        Title="Contact list" Height="760" Width="450">
 
-                <DataTemplate DataType="{x:Type viewmodels:NewContactViewModel}">
-                    <views:NewContactView/>
-                </DataTemplate>
+    <Border Background="#333333" CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <DataTemplate DataType="{x:Type viewmodels:ContactDetailViewModel}">
-                    <views:ContactDetailView/>
-                </DataTemplate>
+            <Grid x:Name="TopBar" Grid.Row="0" Background="Transparent" MouseDown="TopBar_MouseDown" Margin="15 0 7.5 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                <DataTemplate DataType="{x:Type viewmodels:EditContactViewModel}">
-                    <views:EditContactView/>
-                </DataTemplate>
+                <Button Grid.Column="1" x:Name="MinimiseButton"
+                        Content="&#xE738;"
+                        Style="{StaticResource TopBarButton}"
+                        Click="MinimiseButton_Click"/>
+                <Button Grid.Column="2" x:Name="ExitButton"
+                        Content="&#xE7E8;"
+                        Style="{StaticResource TopBarButton}"
+                        Click="ExitButton_Click"/>
+            </Grid>
 
-            </ContentControl.Resources>
-        </ContentControl>
-    </Grid>
+            <ContentControl Grid.Row="1" Margin="5" Content="{Binding CurrentViewModel}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type viewmodels:GetStartedViewModel}">
+                        <views:GetStartedView/>
+                    </DataTemplate>
+                    
+                    <DataTemplate DataType="{x:Type viewmodels:ContactsViewModel}">
+                        <views:ContactsView/>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type viewmodels:NewContactViewModel}">
+                        <views:NewContactView/>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type viewmodels:ContactDetailViewModel}">
+                        <views:ContactDetailView/>
+                    </DataTemplate>
+
+                    <DataTemplate DataType="{x:Type viewmodels:EditContactViewModel}">
+                        <views:EditContactView/>
+                    </DataTemplate>
+
+                    
+
+                </ContentControl.Resources>
+            </ContentControl>
+        </Grid>
+    </Border>
+
+
 </Window>

@@ -29,6 +29,9 @@ namespace Presentation.WinPF_App
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainWindow>();
 
+                    services.AddTransient<GetStartedViewModel>();
+                    services.AddTransient<GetStartedView>();
+
                     services.AddTransient<ContactsViewModel>();
                     services.AddTransient<ContactsView>();
 

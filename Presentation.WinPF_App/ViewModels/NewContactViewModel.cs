@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace Presentation.WinPF_App.ViewModels
 {
+    //TODO: Some sort of shared validation class that could be used in all contact forms? With overloaded methods for different types of context?
     public partial class NewContactViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
@@ -17,7 +18,10 @@ namespace Presentation.WinPF_App.ViewModels
         private ContactCreationForm _ccForm = new();
 
         [ObservableProperty]
-        private ObservableCollection<string> _validationErrors;
+        private string _errorMessage;
+
+        [ObservableProperty]
+        private string _headline = "ADD NEW CONTACT";
 
 
 
@@ -25,7 +29,7 @@ namespace Presentation.WinPF_App.ViewModels
         {
             _serviceProvider = serviceProvider;
             _contactService = contactService;
-            _validationErrors = new();
+            _errorMessage = "";
 
         }
 
@@ -34,25 +38,24 @@ namespace Presentation.WinPF_App.ViewModels
         {
             if (ValidateForm(CcForm))
             {
-                var result = _contactService.Add(CcForm);
-
-                if (result)
+                try
                 {
-                    var mainViewModel = _serviceProvider.GetRequiredService<MainViewModel>();
-                    mainViewModel.CurrentViewModel = _serviceProvider.GetRequiredService<ContactsViewModel>();
+                    var result = _contactService.Add(CcForm);
+
+                    if (result)
+                    {
+                        GoToContacts();
+                    }
                 }
-
-
-            }
-            else
-            {
-                string errorMessage = string.Join(Environment.NewLine, ValidationErrors);
-                System.Windows.MessageBox.Show(
-                    $"Failed to save the contact:\n{errorMessage}",
-                    "Validation Errors",
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(
+                    $"Something went wrong:\n{ex.Message}",
+                    "Unknown error",
                     System.Windows.MessageBoxButton.OK,
                     System.Windows.MessageBoxImage.Warning
-                );
+                    );
+                }
             }
 
         }
@@ -65,15 +68,19 @@ namespace Presentation.WinPF_App.ViewModels
 
         private bool ValidateForm(ContactCreationForm form)
         {
-            ValidationErrors.Clear();
             bool sucessful = true;
             var context = new ValidationContext(new Contact());
             var validationResults = new List<ValidationResult>();
+            var validationErrors = new List<string>();
+
 
             foreach (var property in typeof(ContactCreationForm).GetProperties())
             {
                 context.MemberName = property.Name;
-                sucessful = !Validator.TryValidateProperty(property.GetValue(form), context, validationResults) ? false : sucessful;
+                if(!Validator.TryValidateProperty(property.GetValue(form), context, validationResults))
+                {
+                    sucessful = false;
+                }
 
             }
 
@@ -81,15 +88,16 @@ namespace Presentation.WinPF_App.ViewModels
             {
                 foreach (ValidationResult result in validationResults)
                 {
-                    ValidationErrors.Add(result!.ErrorMessage);
+                    validationErrors.Add(result!.ErrorMessage!);
                 }
             }
 
             if (string.IsNullOrEmpty(form.Email) && string.IsNullOrEmpty(form.PhoneNumber))
             {
-                ValidationErrors.Add("*Either email or phone number must be provided");
+                validationErrors.Add("*Either email or phone number must be provided");
                 sucessful = false;
             }
+            ErrorMessage = string.Join(Environment.NewLine, validationErrors);
             return sucessful;
         }
     }

@@ -104,6 +104,12 @@ namespace Business.Services
             _contacts = _fileService.LoadListFromFile<Contact>();
             return _contacts.FirstOrDefault(x => x.Id == id);
         }
+
+        public bool IsEmpty()
+        {
+            GetAll();
+            return _contacts.Count == 0;
+        }
     }
 }
 
